@@ -18,10 +18,17 @@ export default function Notes() {
   const [editedTitle, setEditedTitle] = useState("")
   const [editedContent, setEditedContent] = useState("")
 
+  const [loading, setLoading] = useState(false)
+  const [loadingNotes, setLoadingNotes] = useState(true)
+
   async function fetchNotes() {
+    setLoadingNotes(true)
+
     const res = await fetch("/api/notes")
     const data = await res.json()
+
     setNotes(data)
+    setLoadingNotes(false)
   }
 
   useEffect(() => {
@@ -44,8 +51,6 @@ export default function Notes() {
   }
 
   async function deleteNote(id: string) {
-    console.log("Deleting", id)
-
     await fetch(`/api/notes/${id}`, {
       method: "DELETE",
     })
@@ -60,101 +65,114 @@ export default function Notes() {
   }
 
   async function updateNote(id: string) {
+    setLoading(true)
+
     await fetch(`/api/notes/${id}`, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         title: editedTitle,
-        content: editedContent,
-      }),
+        content: editedContent
+      })
     })
 
     setEditingNoteId(null)
-
     await fetchNotes()
+    setLoading(false)
   }
 
   return (
     <div style={{ padding: 40 }}>
       <h1>Pinocchio Notes</h1>
 
-      {/* CREATE NOTE */}
-      <div style={{ marginBottom: 20 }}>
-        <input
-          placeholder="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
+      {loadingNotes ? (
+        <p>Loading notes...</p>
+      ) : (
+        <>
+          {/* CREATE NOTE */}
+          <div style={{ marginBottom: 20 }}>
+            <input
+              placeholder="Title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
 
-        <br />
+            <br />
 
-        <textarea
-          placeholder="Content"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-        />
+            <textarea
+              placeholder="Content"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+            />
 
-        <br />
+            <br />
 
-        <button onClick={createNote}>
-          Create Note
-        </button>
-      </div>
+            <button onClick={createNote}>
+              Create Note
+            </button>
+          </div>
 
-      {/* NOTES LIST */}
-      {notes.map((note) => (
-        <div
-          key={note.id}
-          style={{
-            border: "1px solid #ccc",
-            padding: 10,
-            marginBottom: 10,
-          }}
-        >
+          {/* NOTES LIST */}
+          {notes.map((note) => (
+            <div
+              key={note.id}
+              style={{
+                border: "1px solid #ccc",
+                padding: 10,
+                marginBottom: 10,
+              }}
+            >
 
-          {editingNoteId === note.id ? (
-            <>
-              <input
-                value={editedTitle}
-                onChange={(e) => setEditedTitle(e.target.value)}
-              />
+              {editingNoteId === note.id ? (
+                <>
+                  <input
+                    value={editedTitle}
+                    onChange={(e) => setEditedTitle(e.target.value)}
+                  />
 
-              <br />
+                  <br />
 
-              <textarea
-                value={editedContent}
-                onChange={(e) => setEditedContent(e.target.value)}
-              />
+                  <textarea
+                    value={editedContent}
+                    onChange={(e) => setEditedContent(e.target.value)}
+                  />
 
-              <br />
+                  <br />
 
-              <button onClick={() => updateNote(note.id)}>
-                Save
-              </button>
+                  <button onClick={() => updateNote(note.id)}>
+                    {loading ? "Saving..." : "Save"}
+                  </button>
 
-              <button onClick={() => setEditingNoteId(null)}>
-                Cancel
-              </button>
-            </>
-          ) : (
-            <>
-              <h2>{note.title}</h2>
-              <p>{note.content}</p>
+                  <button onClick={() => setEditingNoteId(null)}>
+                    Cancel
+                  </button>
+                </>
+              ) : (
+                <>
+                  <h2>{note.title}</h2>
+                  <p>{note.content}</p>
 
-              <button onClick={() => startEditing(note)}>
-                Edit
-              </button>
+                  <button onClick={() => startEditing(note)}>
+                    Edit
+                  </button>
 
-              <button onClick={() => deleteNote(note.id)}>
-                Delete
-              </button>
-            </>
-          )}
+                  <button
+                    onClick={() => {
+                      if (confirm("Delete this note?")) {
+                        deleteNote(note.id)
+                      }
+                    }}
+                  >
+                    Delete
+                  </button>
+                </> 
+              )}
 
-        </div>
-      ))}
+            </div>
+          ))}
+        </>
+      )}
+
     </div>
   )
 }
