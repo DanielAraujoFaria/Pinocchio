@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState, useEffect } from "react"
 
 type Note = {
   id: string
@@ -8,19 +8,24 @@ type Note = {
   content: string
 }
 
-export default function Home() {
+export default function Notes() {
+
   const [notes, setNotes] = useState<Note[]>([])
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
 
-  async function loadNotes() {
+  const [editingNoteId, setEditingNoteId] = useState<string | null>(null)
+  const [editedTitle, setEditedTitle] = useState("")
+  const [editedContent, setEditedContent] = useState("")
+
+  async function fetchNotes() {
     const res = await fetch("/api/notes")
     const data = await res.json()
     setNotes(data)
   }
 
   useEffect(() => {
-    loadNotes()
+    fetchNotes()
   }, [])
 
   async function createNote() {
@@ -32,17 +37,50 @@ export default function Home() {
       body: JSON.stringify({ title, content }),
     })
 
-    await loadNotes()
-
     setTitle("")
     setContent("")
+
+    await fetchNotes()
+  }
+
+  async function deleteNote(id: string) {
+    console.log("Deleting", id)
+
+    await fetch(`/api/notes/${id}`, {
+      method: "DELETE",
+    })
+
+    await fetchNotes()
+  }
+
+  function startEditing(note: Note) {
+    setEditingNoteId(note.id)
+    setEditedTitle(note.title)
+    setEditedContent(note.content)
+  }
+
+  async function updateNote(id: string) {
+    await fetch(`/api/notes/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: editedTitle,
+        content: editedContent,
+      }),
+    })
+
+    setEditingNoteId(null)
+
+    await fetchNotes()
   }
 
   return (
-    <main style={{ padding: 40 }}>
-      <h1>Pinocchio</h1>
+    <div style={{ padding: 40 }}>
+      <h1>Pinocchio Notes</h1>
 
-      {/* FORMULÁRIO */}
+      {/* CREATE NOTE */}
       <div style={{ marginBottom: 20 }}>
         <input
           placeholder="Title"
@@ -61,24 +99,62 @@ export default function Home() {
         <br />
 
         <button onClick={createNote}>
-          Create note
+          Create Note
         </button>
       </div>
 
-      {/* LISTA DE NOTAS */}
-      {notes.map(note => (
+      {/* NOTES LIST */}
+      {notes.map((note) => (
         <div
           key={note.id}
           style={{
             border: "1px solid #ccc",
             padding: 10,
-            marginBottom: 10
+            marginBottom: 10,
           }}
         >
-          <h2>{note.title}</h2>
-          <p>{note.content}</p>
+
+          {editingNoteId === note.id ? (
+            <>
+              <input
+                value={editedTitle}
+                onChange={(e) => setEditedTitle(e.target.value)}
+              />
+
+              <br />
+
+              <textarea
+                value={editedContent}
+                onChange={(e) => setEditedContent(e.target.value)}
+              />
+
+              <br />
+
+              <button onClick={() => updateNote(note.id)}>
+                Save
+              </button>
+
+              <button onClick={() => setEditingNoteId(null)}>
+                Cancel
+              </button>
+            </>
+          ) : (
+            <>
+              <h2>{note.title}</h2>
+              <p>{note.content}</p>
+
+              <button onClick={() => startEditing(note)}>
+                Edit
+              </button>
+
+              <button onClick={() => deleteNote(note.id)}>
+                Delete
+              </button>
+            </>
+          )}
+
         </div>
       ))}
-    </main>
+    </div>
   )
 }
