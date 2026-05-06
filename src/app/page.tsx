@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Spinner } from "@hugeicons/core-free-icons"
 import { Loader2 } from "lucide-react"
 import { Card } from "@/components/ui/card"
+import { CreateNote } from "@/components/CreateNote"
 
 type Note = {
   id: string
@@ -89,28 +90,14 @@ export default function Notes() {
     <div className="p-6 space-y-6">
 
       {/* CREATE NOTE */}
-      <div className="p-4 border rounded-md bg-white space-y-3 max-w-md">
-        <input
-          className="border p-2 w-full rounded"
-          placeholder="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
+      <div className="flex justify-start">
+        <CreateNote
+          title={title}
+          setTitle={setTitle}
+          content={content}
+          setContent={setContent}
+          createNote={createNote}
         />
-
-        <textarea
-          className="border p-2 w-full rounded"
-          placeholder="Content"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-        />
-
-        <Button
-          variant="outline"
-          size="lg"
-          onClick={createNote}
-        >
-          Create Note
-        </Button>
       </div>
 
       {/* LOADING */}
