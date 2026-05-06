@@ -1,6 +1,10 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { Button } from "@/components/ui/button"
+import { Spinner } from "@hugeicons/core-free-icons"
+import { Loader2 } from "lucide-react"
+import { Card } from "@/components/ui/card"
 
 type Note = {
   id: string
@@ -82,97 +86,115 @@ export default function Notes() {
   }
 
   return (
-    <div style={{ padding: 40 }}>
-      <h1>Pinocchio Notes</h1>
+    <div className="p-6 space-y-6">
 
+      {/* CREATE NOTE */}
+      <div className="p-4 border rounded-md bg-white space-y-3 max-w-md">
+        <input
+          className="border p-2 w-full rounded"
+          placeholder="Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+
+        <textarea
+          className="border p-2 w-full rounded"
+          placeholder="Content"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+        />
+
+        <Button
+          variant="outline"
+          size="lg"
+          onClick={createNote}
+        >
+          Create Note
+        </Button>
+      </div>
+
+      {/* LOADING */}
       {loadingNotes ? (
         <p>Loading notes...</p>
       ) : (
-        <>
-          {/* CREATE NOTE */}
-          <div style={{ marginBottom: 20 }}>
-            <input
-              placeholder="Title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
+        /* NOTES GRID */
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
-            <br />
-
-            <textarea
-              placeholder="Content"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-            />
-
-            <br />
-
-            <button onClick={createNote}>
-              Create Note
-            </button>
-          </div>
-
-          {/* NOTES LIST */}
           {notes.map((note) => (
-            <div
+            <Card
               key={note.id}
-              style={{
-                border: "1px solid #ccc",
-                padding: 10,
-                marginBottom: 10,
-              }}
+              className="bg-blue-100 p-5 rounded-md"
             >
 
               {editingNoteId === note.id ? (
                 <>
                   <input
+                    className="border p-2 w-full mb-2"
                     value={editedTitle}
                     onChange={(e) => setEditedTitle(e.target.value)}
                   />
 
-                  <br />
-
                   <textarea
+                    className="border p-2 w-full mb-2"
                     value={editedContent}
                     onChange={(e) => setEditedContent(e.target.value)}
                   />
 
-                  <br />
-
-                  <button onClick={() => updateNote(note.id)}>
+                  <Button
+                    className="mr-2"
+                    onClick={() => updateNote(note.id)}
+                    disabled={loading}
+                  >
+                    {loading && (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    )}
                     {loading ? "Saving..." : "Save"}
-                  </button>
+                  </Button>
 
-                  <button onClick={() => setEditingNoteId(null)}>
+                  <Button
+                    variant="destructive"
+                    onClick={() => setEditingNoteId(null)}
+                  >
                     Cancel
-                  </button>
+                  </Button>
                 </>
               ) : (
                 <>
-                  <h2>{note.title}</h2>
-                  <p>{note.content}</p>
+                  <h2 className="font-semibold text-lg">
+                    {note.title}
+                  </h2>
 
-                  <button onClick={() => startEditing(note)}>
-                    Edit
-                  </button>
+                  <p className="mb-3">
+                    {note.content}
+                  </p>
 
-                  <button
-                    onClick={() => {
-                      if (confirm("Delete this note?")) {
-                        deleteNote(note.id)
-                      }
-                    }}
-                  >
-                    Delete
-                  </button>
-                </> 
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      onClick={() => startEditing(note)}
+                    >
+                      Edit
+                    </Button>
+
+                    <Button
+                      variant="destructive"
+                      onClick={() => {
+                        if (confirm("Delete this note?")) {
+                          deleteNote(note.id)
+                        }
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                </>
               )}
 
-            </div>
+            </Card>
           ))}
-        </>
-      )}
 
+        </div>
+      )}
     </div>
   )
 }
