@@ -22,7 +22,7 @@ export function CreateNote({
         <Dialog>
 
             <DialogTrigger asChild>
-                <Button size="icon" className="rounded-2xl h-12 w-12 text-xl bg-neutral-300 text-black font-extrabold"><Plus /></Button>
+                <Button size="icon" className="rounded-2xl h-12 w-12 text-xl bg-neutral-300 text-black  hover:bg-green-300 hover:text-white font-extrabold"><Plus /></Button>
             </DialogTrigger>
 
             <DialogContent>

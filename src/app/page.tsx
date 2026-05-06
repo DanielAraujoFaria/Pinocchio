@@ -110,7 +110,7 @@ export default function Notes() {
           {notes.map((note) => (
             <Card
               key={note.id}
-              className="bg-blue-100 p-5 rounded-md"
+              className="bg-gray-200 p-5 rounded-md"
             >
 
               {editingNoteId === note.id ? (
@@ -129,6 +129,7 @@ export default function Notes() {
 
                   <Button
                     className="mr-2"
+                    variant="secondary"
                     onClick={() => updateNote(note.id)}
                     disabled={loading}
                   >
@@ -157,14 +158,14 @@ export default function Notes() {
 
                   <div className="flex gap-2">
                     <Button
-                      variant="outline"
+                      variant="secondary"
                       onClick={() => startEditing(note)}
                     >
                       Edit
                     </Button>
 
                     <Button
-                      variant="destructive"
+                      variant="default"
                       onClick={() => {
                         if (confirm("Delete this note?")) {
                           deleteNote(note.id)
