@@ -4,6 +4,7 @@ import { Toaster } from "sonner";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Header } from "@/components/header";
+import { Sidebar } from "@/components/sidebar";
 
 const figtree = Figtree({
   subsets: ["latin"],
@@ -41,8 +42,18 @@ export default function RootLayout({
       )}
     >
       <body className="min-h-full flex flex-col">
-        <Header/>
-        {children}
+
+        
+
+        <div className="flex flex-1">
+          <Sidebar />
+
+          <main className="flex-1 p-6">
+            <Header />                                        
+            {children}
+          </main>
+        </div>
+
         <Toaster />
       </body>
     </html>
