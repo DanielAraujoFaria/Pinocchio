@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Loader2 } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import { CreateNote } from "@/components/CreateNote"
+import { NoteCard } from "@/components/NoteCard"
 
 type Note = {
   id: string
@@ -112,80 +113,20 @@ export default function Notes() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
               {notes.map((note) => (
-                <Card
+                <NoteCard
                   key={note.id}
-                  className="bg-gray-200 p-5 rounded-md aspect-square"
-                >
-
-                  {/* FUTURE MARKER */}
-                  <div className="bg-neutral-400 h-4 w-4 rounded-3xl"></div>
-
-                  {editingNoteId === note.id ? (
-                    <>
-                      <input
-                        className="border p-2 w-full mb-2"
-                        value={editedTitle}
-                        onChange={(e) => setEditedTitle(e.target.value)}
-                      />
-
-                      <textarea
-                        className="border p-2 w-full mb-2"
-                        value={editedContent}
-                        onChange={(e) => setEditedContent(e.target.value)}
-                      />
-
-                      <Button
-                        className="mr-2"
-                        variant="secondary"
-                        onClick={() => updateNote(note.id)}
-                        disabled={loading}
-                      >
-                        {loading && (
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        )}
-                        {loading ? "Saving..." : "Save"}
-                      </Button>
-
-                      <Button
-                        variant="destructive"
-                        onClick={() => setEditingNoteId(null)}
-                      >
-                        Cancel
-                      </Button>
-                    </>
-                  ) : (
-                    <>
-                      <h2 className="font-semibold text-lg">
-                        {note.title}
-                      </h2>
-
-                      <p className="mb-3">
-                        {note.content}
-                      </p>
-
-                      <div className="flex gap-2">
-                        <Button
-                          variant="secondary"
-                          onClick={() => startEditing(note)}
-                        >
-                          Edit
-                        </Button>
-
-                        <Button
-                          variant="default"
-                          onClick={() => {
-                            if (confirm("Delete this note?")) {
-                              deleteNote(note.id)
-                            }
-                          }}
-                        >
-                          Delete
-                        </Button>
-                      </div>
-                    </>
-                  )}
-
-                </Card>
+                  note={note}
+                  editingNoteId={editingNoteId}
+                  editedTitle={editedTitle}
+                  editedContent={editedContent}
+                  setEditedTitle={setEditedTitle}
+                  setEditedContent={setEditedContent}
+                  startEditing={startEditing}
+                  updateNote={updateNote}
+                  deleteNote={deleteNote}
+                  cancelEdit={() => setEditingNoteId(null)}
+                  loading={loading}
+                />
               ))}
 
             </div>
@@ -196,7 +137,7 @@ export default function Notes() {
 
         {/* SIDE CONTENT */}
         <div className="bg-gray-200 w-64 h-fit rounded-md p-4">
-          
+
         </div>
       </div>
     </div>
