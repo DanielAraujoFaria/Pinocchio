@@ -4,6 +4,14 @@ import { Button } from "@/components/ui/button"
 import { Loader2 } from "lucide-react"
 import { Card } from "@/components/ui/card"
 
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogTitle,
+  DialogDescription
+} from "./ui/dialog"
+
 type Note = {
   id: string
   title: string
@@ -41,74 +49,100 @@ export function NoteCard({
   const isEditing = editingNoteId === note.id
 
   return (
-    <Card className="bg-gray-200 p-4 rounded-md aspect-square">
+    <Dialog>
+      
 
-      <div className="bg-neutral-400 h-4 w-4 rounded-full mb-2"></div>
+      {/* CARD */}
+      <DialogTrigger asChild>
+        <Card className="bg-gray-200 p-4 rounded-md aspect-square cursor-pointer hover:bg-gray-300 transition">
 
-      {isEditing ? (
-        <>
-          <input
-            className="border p-2 w-full mb-2"
-            value={editedTitle}
-            onChange={(e) => setEditedTitle(e.target.value)}
-          />
+          <div className="bg-neutral-400 h-4 w-4 rounded-full mb-2"></div>
 
-          <textarea
-            className="border p-2 w-full mb-2"
-            value={editedContent}
-            onChange={(e) => setEditedContent(e.target.value)}
-          />
-
-          <Button
-            className="mr-2"
-            variant="secondary"
-            onClick={() => updateNote(note.id)}
-            disabled={loading}
-          >
-            {loading && (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            )}
-            {loading ? "Saving..." : "Save"}
-          </Button>
-
-          <Button
-            variant="destructive"
-            onClick={cancelEdit}
-          >
-            Cancel
-          </Button>
-        </>
-      ) : (
-        <>
           <h2 className="font-semibold text-lg">
             {note.title}
           </h2>
 
-          <p className="mb-3">
+          <p className="mb-3 line-clamp-4">
             {note.content}
           </p>
 
-          <div className="flex gap-2">
-            <Button
-              variant="secondary"
-              onClick={() => startEditing(note)}
-            >
-              Edit
-            </Button>
+        </Card>
+      </DialogTrigger>
 
-            <Button
-              onClick={() => {
-                if (confirm("Delete this note?")) {
-                  deleteNote(note.id)
-                }
-              }}
-            >
-              Delete
-            </Button>
-          </div>
-        </>
-      )}
+      {/* MODAL */}
+      <DialogContent className="max-w-xl">
 
-    </Card>
+        <DialogTitle>
+          {note.title}
+        </DialogTitle>
+
+        {isEditing ? (
+          <>
+            <input
+              className="border p-2 w-full mb-2 rounded"
+              value={editedTitle}
+              onChange={(e) => setEditedTitle(e.target.value)}
+            />
+
+            <textarea
+              className="border p-2 w-full mb-4 rounded"
+              value={editedContent}
+              onChange={(e) => setEditedContent(e.target.value)}
+            />
+
+            <div className="flex gap-2">
+              <Button
+                variant="secondary"
+                onClick={() => updateNote(note.id)}
+                disabled={loading}
+              >
+                {loading && (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                )}
+
+                {loading ? "Saving..." : "Save"}
+              </Button>
+
+              <Button
+                variant="destructive"
+                onClick={cancelEdit}
+              >
+                Cancel
+              </Button>
+            </div>
+          </>
+        ) : (
+          <>
+            <p className="mt-4 whitespace-pre-wrap">
+              {note.content}
+            </p>
+
+            <div className="flex gap-2 mt-6">
+
+              <Button
+                variant="secondary"
+                onClick={() => startEditing(note)}
+              >
+                Edit
+              </Button>
+
+              <Button
+                variant="destructive"
+                onClick={() => {
+                  if (confirm("Delete this note?")) {
+                    deleteNote(note.id)
+                  }
+                }}
+              >
+                Delete
+              </Button>
+
+            </div>
+          </>
+        )}
+
+      </DialogContent>
+
+    </Dialog>
   )
 }

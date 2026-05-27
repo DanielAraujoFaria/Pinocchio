@@ -1,6 +1,7 @@
-import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog"
+import { Dialog, DialogTrigger, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
+import { VisuallyHidden } from "radix-ui"
 
 type CreateNoteProps = {
     title: string
@@ -26,6 +27,9 @@ export function CreateNote({
             </DialogTrigger>
 
             <DialogContent>
+                <VisuallyHidden.Root>
+                    <DialogTitle>Create Note</DialogTitle>
+                </VisuallyHidden.Root>
 
                 <h2 className="text-lg font-bold mb-4">Create Note</h2>
 

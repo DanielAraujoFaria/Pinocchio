@@ -53,6 +53,7 @@ export default function Notes() {
     setContent("")
 
     await fetchNotes()
+    setLoading(false)
   }
 
   async function deleteNote(id: string) {
@@ -136,7 +137,7 @@ export default function Notes() {
         </div>
 
         {/* SIDE CONTENT */}
-        <div className="bg-gray-200 w-64 h-fit rounded-md p-4">
+        <div className="bg-gray-200 w-96 h-63 rounded-md p-4">
 
         </div>
       </div>
