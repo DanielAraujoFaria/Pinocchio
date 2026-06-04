@@ -54,7 +54,7 @@ export function NoteCard({
 
       {/* CARD */}
       <DialogTrigger asChild>
-        <Card className="bg-gray-200 p-4 rounded-md aspect-square cursor-pointer hover:bg-gray-300 transition">
+        <Card className="bg-gray-200 p-4 rounded-md aspect-square cursor-pointer hover:bg-gray-300 hover:-translate-y-2 hover:scale-105 transition">
 
           <div className="bg-neutral-400 h-4 w-4 rounded-full mb-2"></div>
 
