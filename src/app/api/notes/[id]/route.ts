@@ -36,7 +36,8 @@ export async function PUT(
       where: { id },
       data: {
         title: body.title,
-        content: body.content
+        content: body.content,
+        tags: body.tags ?? []
       }
     })
 

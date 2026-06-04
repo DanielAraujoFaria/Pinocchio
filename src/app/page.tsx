@@ -12,6 +12,7 @@ type Note = {
   id: string
   title: string
   content: string
+  tags?: string[]
 }
 
 export default function Notes() {
@@ -31,6 +32,7 @@ export default function Notes() {
   const filteredNotes = notes.filter((note) =>
     note.title.toLowerCase().includes(search.toLowerCase())
   )
+
 
   async function fetchNotes() {
     setLoadingNotes(true)

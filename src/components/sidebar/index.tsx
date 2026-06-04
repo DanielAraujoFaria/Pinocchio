@@ -18,14 +18,14 @@ export function Sidebar() {
             </div>
 
             <div className="flex items-center gap-2 p-4 bg-neutral-400 rounded-xl">
-                <Search className="h-4 w-4 text-black" />
+                <Search className="h-4 w-4 white" />
 
                 <input
                     type="text"
                     placeholder="Search notes..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="w-full bg-transparent outline-none text-black placeholder:text-neutral-700"
+                    className="w-full bg-transparent outline-none text-white placeholder:text-white/50"
                 />
             </div>
 
