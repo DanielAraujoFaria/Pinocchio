@@ -5,6 +5,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Header } from "@/components/header";
 import { Sidebar } from "@/components/sidebar";
+import { SearchProvider } from "@/contexts/SearchContext"
 
 const figtree = Figtree({
   subsets: ["latin"],
@@ -43,16 +44,18 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
 
-        
+        <SearchProvider>
 
-        <div className="flex flex-1">
-          <Sidebar />
+          <div className="flex flex-1">
+            <Sidebar />
 
-          <main className="flex-1 mx-3">
-            <Header />
-            {children}
-          </main>
-        </div>
+            <main className="flex-1 mx-3">
+              <Header />
+              {children}
+            </main>
+          </div>
+          
+        </SearchProvider>
 
         <Toaster />
       </body>

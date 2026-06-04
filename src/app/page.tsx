@@ -6,6 +6,7 @@ import { Loader2 } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import { CreateNote } from "@/components/CreateNote"
 import { NoteCard } from "@/components/NoteCard"
+import { useSearch } from "@/contexts/SearchContext"
 
 type Note = {
   id: string
@@ -25,6 +26,11 @@ export default function Notes() {
 
   const [loading, setLoading] = useState(false)
   const [loadingNotes, setLoadingNotes] = useState(true)
+
+  const { search } = useSearch()
+  const filteredNotes = notes.filter((note) =>
+    note.title.toLowerCase().includes(search.toLowerCase())
+  )
 
   async function fetchNotes() {
     setLoadingNotes(true)
@@ -113,7 +119,7 @@ export default function Notes() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
-              {notes.map((note) => (
+              {filteredNotes.map((note) => (
                 <NoteCard
                   key={note.id}
                   note={note}
